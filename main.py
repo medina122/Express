@@ -40,15 +40,15 @@ def preparar_worksplace():
     bot.typewrite('Facemask', interval=0.02)
     bot.press('enter', interval=1)
     locate_image('express', click=False, check=True)
-    locate_image('you_searched_for_facemask', duration=0.01, wait=2, end=3, check=True, click=False, move=False)
+    locate_image('you_searched_for_facemask', duration=0.01, wait=2, end=5, check=True, click=False, move=False)
     bot.scroll(-(random.randint(190,230)))
-    locate_image('facemask', wait=1) or locate_image('facemask2', wait=1)
+    locate_image('facemask', wait=1, end=3) or locate_image('facemask2', wait=1, end=3)
     locate_image('facemask_title', wait=5, check=True, end=1)
     bot.scroll(-(random.randint(200,250)))
-    locate_image('add_to_bag', wait=1, end=2)
+    locate_image('add_to_bag', wait=3, end=2)
     locate_image('item_added', check=True, move=False, click=False)
     locate_image('view_bag', check=True, end=3)
-    locate_image('bag_summary', check=True, move=False, click=False)
+    locate_image('bag_summary',wait=3, end=1, check=True, move=False, click=False)
     sleep(2)
     bot.scroll(-(random.randint(450,550)))
     locate_image('checkout', check=True, wait=2, end=2)
@@ -58,6 +58,7 @@ def preparar_worksplace():
     # # SEGUNDA PARTE - CONTACT INFORMATION
     from generador import nombre, apellido, email, dominio, telefono
     locate_image('contact_information', check=True, move=False, click=False, end=0.2)
+    locate_image('first_name', check=True, move=False, click=False, end=0.2)
     bot.typewrite(nombre, interval=0.04)
     bot.press('tab', interval=0.25)
     bot.typewrite(apellido, interval=0.04)
@@ -174,7 +175,7 @@ def livear_cc(cc, month, year, cvv):
         bot.typewrite(cvv, interval=0.05)
         sleep(0.20)
     
-    locate_image('place_order', wait=0.5, end=2.5)
+    locate_image('place_order', wait=1, end=10)
 
 def main():
 
@@ -186,28 +187,50 @@ def main():
 
         while True:
             
-            if locate_image('place_order', move=False, click=False):
-                break
-            elif locate_image('we_experienced_a_problem', move=False, click=False):
+            # if locate_image('place_order', move=False, click=False):
+            #     break
+            if locate_image('we_experienced_a_problem', move=False, click=False):
                 bot.press('f5')
-                locate_image('credit_card_number', move=False, click=False, output=False) or locate_image('credit_card_number2', move=False, click=False, output=False) 
+                locate_image('credit_card_number', check=True, move=False, click=False, output=False) 
                 break
             elif locate_image('we_are_having_trouble', move=False, click=False):
                 break
             elif locate_image('call_us_to_place_order', move=False, click=False):
-                pyperclip.copy('chrome://settings/clearBrowserData')
-                bot.hotkey('ctrl', 'l')
-                bot.hotkey('ctrl', 'v')
-                bot.press('enter')
-                locate_image('borrar_datos', check=True)
-                bot.hotkey('ctrl', 'l')
-                pyperclip.copy('express.com')
-                bot.hotkey('ctrl', 'v')
-                bot.press('enter')
+                bot.hotkey('alt', 'f4')
                 preparar_worksplace()
                 break
         sleep(0.10)
-main()
+# main()
+
+def change_mac():
+    locate_image('tmac_icon', wait=1, end=1)
+    locate_image('tmac_ethernet', end=1)
+    locate_image('tmac_random', end=1)
+    locate_image('tmac_change', end=1)
+    locate_image('tmac_mac_changed', move=False, click=False, wait=1, check=True)
+    locate_image('tmac_aceptar')
+
+    print('Mac has been changed!')
+
+def change_windscribe_ip():
+    locate_image('windscribe_icon', wait=1, end=1.5)
+    
+    if locate_image('windscribe_status_on', move=False, click=False):
+        locate_image('windscribe_turn_off')
+        locate_image('windscribe_status_off', check=True, move=False, click=False)
+        locate_image('windscribe_turn_on')
+        locate_image('windscribe_status_on', wait=2, check=True, move=False, click=False)
+        print('VPN Online!')
+
+    elif locate_image('windscribe_status_off', move=False, click=False):
+        locate_image('windscribe_turn_on')
+        locate_image('windscribe_status_on', wait=2, check=True, move=False, click=False)
+        print('VPN Online!')
+    else: print('mmm, something went wrong!')
+
+
+change_windscribe_ip()
+
     
     
     
