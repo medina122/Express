@@ -58,6 +58,7 @@ def locate_image(name, move=True, click=True, co=0.8, wait=0, end=0, duration=0.
 
         while True:
 
+            sleep(0.25)
             if locate(name, move, click, co, duration, output)[0] == True:
                 break
             else: sleep(1)
