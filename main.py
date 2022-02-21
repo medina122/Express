@@ -202,36 +202,9 @@ def main():
         sleep(0.10)
 # main()
 
-def change_mac():
-    locate_image('tmac_icon', wait=1, end=1)
-    locate_image('tmac_ethernet', end=1)
-    locate_image('tmac_random', end=1)
-    locate_image('tmac_change', end=1)
-    locate_image('tmac_mac_changed', move=False, click=False, wait=1, check=True)
-    locate_image('tmac_aceptar')
-
-    print('Mac has been changed!')
-
-def change_windscribe_ip():
-    locate_image('windscribe_icon', wait=1, end=1.5)
-    
-    if locate_image('windscribe_status_on', move=False, click=False):
-        print('Changing IP')
-        locate_image('windscribe_turn_off')
-        locate_image('windscribe_status_off', check=True, move=False, click=False)
-        locate_image('windscribe_turn_on')
-        locate_image('windscribe_status_on', wait=2, check=True, move=False, click=False)
-        print('VPN Online!')
-
-    elif locate_image('windscribe_status_off', move=False, click=False):
-        print('Turning on!')
-        locate_image('windscribe_turn_on')
-        locate_image('windscribe_status_on', wait=2, check=True, move=False, click=False)
-        print('VPN Online!')
-    else: print('mmm, something went wrong!')
 
 
-change_windscribe_ip()
+
 
     
     
