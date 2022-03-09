@@ -5,7 +5,7 @@ import colorama, requests, os, pyperclip
 from colorama import Fore
 
 colorama.init()
-
+path = os.getcwd()
 tweens = [bot.linear, bot.easeInQuad, bot.easeOutQuad, bot.easeInOutQuad, bot.easeInCubic, bot.easeOutCubic, bot.easeInOutCubic, bot.easeInQuart, bot.easeOutQuart, bot.easeInOutQuart, bot.easeInQuint, bot.easeOutQuint, bot.easeInOutQuint, bot.easeInSine, bot.easeOutSine, bot.easeInOutSine, bot.easeInExpo, bot.easeOutExpo, bot.easeInOutExpo, bot.easeInCirc, bot.easeOutCirc, bot.easeInOutCirc, bot.easeInElastic, bot.easeOutElastic, bot.easeInOutElastic, bot.easeInBack, bot.easeOutBack, bot.easeInOutBack, bot.easeInBounce, bot.easeOutBounce, bot.easeInOutBounce]
 
 
@@ -13,62 +13,43 @@ def clear():
     import os
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def locate(name, move=True, click=True, co=0.8, wait=0, end=0, duration=random.randint(10,25)/100, output=True):
+def image_position(img_name: str, conf: float, check: bool):
+    image = os.path.join(path, 'src', img_name) + '.png'
+    print(image)
+    cords = bot.locateOnScreen(image, confidence=conf)
 
-    if wait != 0: sleep(wait)
-
-    path = os.path.abspath(os.path.dirname(__file__))
-    data = ''
-
-    if path.startswith('C:'):
-        data = path +f'\src\{name}.png'
+    if cords != (None):
+        print(cords)
+    elif not cords and check:
+        attempt = 0
+        sleep(0.25)
+        while not cords:
+            attempt += 1
+            print(f'Locating {img_name}, attempt: {attempt}')
+            sleep(0.5)
+            cords =  bot.locateOnScreen(image, confidence=conf)
+    else: print(f'Not found: {img_name}')    
+    return cords
     
-    else:
-        data = path +f'/src/{name}.png'
+def locate_image(img_name, conf=.8, check=False, move=True, click=True, wait=None, end=None):
 
-    global cords
-    cords = bot.locateOnScreen(data, confidence=co)
+    if wait != None: sleep(wait)
 
-    if cords:
+    image = image_position(img_name, conf, check)
 
-        if move:
-            bot.moveTo(cords, tween=random.choice(tweens), duration=duration)
+    try:
+        if image != (None): 
+            if move: bot.moveTo(image, duration=random.randint(10,30)/100, tween=random.choice(tweens))
+            if click: 
+                bot.click(image, duration=random.randint(10,30)/100, tween=random.choice(tweens))
+                # Si le agrego esto, me jodera las variables que usan el movimiento relativo
+                # bot.moveRel(random.randint(200,1200), random.randint(100,800))
 
-        if click:
-            bot.click(cords, duration=duration)
-
-        if output:
-            print(f'Found {name} at {cords[0], cords[1]}')
-
-        if end != 0: sleep(end)
-
-        return True, cords
-        
-    else: 
-        if output:
-            print(f'Not found {name}')
-        return False, None
-
-def locate_image(name, move=True, click=True, co=0.8, wait=0, end=0, duration=0.20, output=True, check=False):
-
-    if check:
-
-        if wait != 0:
-            sleep(wait)
-
-        while True:
-
-            sleep(0.25)
-            if locate(name, move, click, co, duration, output)[0] == True:
-                break
-            else: sleep(1)
-        
-        if end != 0: sleep(end)
-        return True, cords
+    except: 
+        print('Actions cannot be completed')
     
-    else:
-        if locate(name, move, click, co, wait, end, duration, output)[0]==True:
-            return True, cords
+    if end != None: sleep(end)
+    return image
 
 
 def telegram_report(txt, chatid):

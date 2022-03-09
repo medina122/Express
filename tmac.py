@@ -1,4 +1,4 @@
-from new import locate_image
+from funciones import locate_image
 
 def change_mac():
     locate_image('tmac_icon', wait=1, end=1)
